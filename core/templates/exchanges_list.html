@@ -1,0 +1,60 @@
+{% extends 'base.html' %}
+
+{% block title %}Мои обмены — SkillSwap{% endblock %}
+
+{% block content %}
+    <h2>🔄 Мои обмены</h2>
+
+    {% if exchanges %}
+        <div style="display: flex; flex-direction: column; gap: 20px;">
+            {% for exchange in exchanges %}
+                <div style="background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
+                    <h3>
+                        {% if exchange.user1 == user %}
+                            ↔ С {{ exchange.user2.full_name }}
+                        {% else %}
+                            ↔ С {{ exchange.user1.full_name }}
+                        {% endif %}
+                    </h3>
+
+                    {% if exchange.proposal %}
+                        <p><strong>На основе предложения:</strong> 
+                            "{{ exchange.proposal.skill_offered.name }} → {{ exchange.proposal.skill_wanted.name }}"
+                        </p>
+                    {% elif exchange.request %}
+                        <p><strong>На основе запроса:</strong> 
+                            "{{ exchange.request.skill_wanted.name }} в обмен на {{ exchange.request.skill_offered.name }}"
+                        </p>
+                    {% endif %}
+
+                    <p><strong>Статус:</strong> {{ exchange.get_status_display }}</p>
+                    <p><strong>Формат:</strong> {{ exchange.get_format_display }}</p>
+
+                    {% if exchange.start_date %}
+                        <p><strong>Начало:</strong> {{ exchange.start_date|date:"d.m.Y H:i" }}</p>
+                    {% endif %}
+                    {% if exchange.end_date %}
+                        <p><strong>Завершение:</strong> {{ exchange.end_date|date:"d.m.Y H:i" }}</p>
+                    {% endif %}
+
+                    {% if exchange.location and exchange.format == 'офлайн' %}
+                        <p><strong>Место встречи:</strong> {{ exchange.location }}</p>
+                    {% endif %}
+
+                    <div style="margin-top: 15px;">
+                        <a href="#" style="color: #2980b9; margin-right: 15px;">✉️ Написать сообщение</a>
+                        {% if exchange.status == 'активен' %}
+                            <a href="#" style="color: #27ae60;">✅ Завершить обмен</a>
+                        {% endif %}
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div style="background: #fff3cd; padding: 20px; border-radius: 8px; margin-bottom: 20px;">
+            <p>У тебя пока нет обменов. <a href="{% url 'proposals_list' %}" style="color: #2980b9;">Найди предложение</a> или <a href="{% url 'proposal_create' %}" style="color: #2980b9;">создай своё</a>.</p>
+        </div>
+    {% endif %}
+
+    <a href="{% url 'home' %}" style="color: #6c757d;">← Вернуться на главную</a>
+{% endblock %}

@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+
+{% block title %}Создать предложение — SkillSwap{% endblock %}
+
+{% block content %}
+    <h2>➕ Создать предложение обмена</h2>
+
+    {% if messages %}
+        {% for message in messages %}
+            <div style="background: #d4edda; color: #155724; padding: 10px; border-radius: 5px; margin-bottom: 20px;">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endif %}
+
+    <form method="post" style="background: white; padding: 30px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
+        {% csrf_token %}
+
+        <div style="margin-bottom: 20px;">
+            <label for="{{ form.skill_offered.id_for_label }}" style="font-weight: bold;">{{ form.skill_offered.label }}</label>
+            {{ form.skill_offered }}
+            {% if form.skill_offered.errors %}
+                <div style="color: #dc3545;">{{ form.skill_offered.errors }}</div>
+            {% endif %}
+        </div>
+
+        <div style="margin-bottom: 20px;">
+            <label for="{{ form.skill_wanted.id_for_label }}" style="font-weight: bold;">{{ form.skill_wanted.label }}</label>
+            {{ form.skill_wanted }}
+            {% if form.skill_wanted.errors %}
+                <div style="color: #dc3545;">{{ form.skill_wanted.errors }}</div>
+            {% endif %}
+        </div>
+
+        <div style="margin-bottom: 20px;">
+            <label for="{{ form.format.id_for_label }}" style="font-weight: bold;">{{ form.format.label }}</label>
+            {{ form.format }}
+            {% if form.format.errors %}
+                <div style="color: #dc3545;">{{ form.format.errors }}</div>
+            {% endif %}
+        </div>
+
+        <div style="margin-bottom: 20px;">
+            <label for="{{ form.deadlines.id_for_label }}" style="font-weight: bold;">{{ form.deadlines.label }}</label>
+            {{ form.deadlines }}
+            {% if form.deadlines.errors %}
+                <div style="color: #dc3545;">{{ form.deadlines.errors }}</div>
+            {% endif %}
+        </div>
+
+        <div style="margin-bottom: 20px;">
+            <label for="{{ form.description.id_for_label }}" style="font-weight: bold;">{{ form.description.label }}</label>
+            {{ form.description }}
+            {% if form.description.errors %}
+                <div style="color: #dc3545;">{{ form.description.errors }}</div>
+            {% endif %}
+        </div>
+
+        <button type="submit" style="background: #2980b9; color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer;">
+            📤 Создать предложение
+        </button>
+        <a href="{% url 'proposals_list' %}" style="margin-left: 10px; color: #6c757d;">← Назад к списку</a>
+    </form>
+{% endblock %}
