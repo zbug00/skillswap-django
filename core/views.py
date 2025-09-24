@@ -46,7 +46,23 @@ def skills_list_view(request):
     return render(request, 'skills_list.html', {'skills': skills})
 
 def home_view(request):
-    return render(request, 'home.html')
+    categories = Category.objects.all()
+    context = {
+        "slides": [
+            {
+                "title": "asdsad",
+                "text": "asdsad123",
+                "sub_text": "asdsad213",
+            },
+            {
+                "title": "asdsad",
+                "text": "asdsad123",
+                "sub_text": "asdsad213",
+            },
+        ],
+        "categories": categories
+    }
+    return render(request, 'home.html', context=context)
 
 @login_required
 def exchanges_list_view(request):

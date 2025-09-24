@@ -5,12 +5,12 @@ from .models import (
     Point, PointTransaction
 )
 
-@admin.register(User)
-class UserAdmin(admin.ModelAdmin):
-    list_display = ['email', 'full_name', 'rating', 'city', 'registration_date']
-    search_fields = ['email', 'full_name', 'city']
-    list_filter = ['city', 'rating']
-    ordering = ['-registration_date']
+# @admin.register(User)
+# class UserAdmin(admin.ModelAdmin):
+#     list_display = ['email', 'full_name', 'rating', 'city', 'registration_date']
+#     search_fields = ['email', 'full_name', 'city']
+#     list_filter = ['city', 'rating']
+#     ordering = ['-registration_date']
 
 @admin.register(Category)
 class CategoryAdmin(admin.ModelAdmin):
@@ -23,11 +23,11 @@ class SkillAdmin(admin.ModelAdmin):
     list_filter = ['category', 'level']
     search_fields = ['name', 'description']
 
-@admin.register(UserSkill)
-class UserSkillAdmin(admin.ModelAdmin):
-    list_display = ['user', 'skill']
-    list_filter = ['skill__category']
-    search_fields = ['user__email', 'skill__name']
+# @admin.register(UserSkill)
+# class UserSkillAdmin(admin.ModelAdmin):
+#     list_display = ['user', 'skill']
+#     list_filter = ['skill__category']
+#     search_fields = ['user__email', 'skill__name']
 
 @admin.register(Proposal)
 class ProposalAdmin(admin.ModelAdmin):
@@ -87,3 +87,16 @@ class PointTransactionAdmin(admin.ModelAdmin):
     list_filter = ['reason', 'created_at']
     search_fields = ['user__email']
     raw_id_fields = ['user', 'exchange']
+
+
+
+class UserSkilsAdmin(admin.TabularInline):
+    model = UserSkill
+    extra = 1
+class UserAdmin(admin.ModelAdmin):
+    inlines = [
+        UserSkilsAdmin
+    ]
+
+
+admin.site.register(User, UserAdmin)

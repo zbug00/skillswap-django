@@ -27,4 +27,5 @@ urlpatterns = [
     path('proposals/create/', views.proposal_create_view, name='proposal_create'),
     path('exchanges/', views.exchanges_list_view, name='exchanges_list'),
     
+    
 ]
