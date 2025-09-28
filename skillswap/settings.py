@@ -28,6 +28,8 @@ DEBUG = True
 ALLOWED_HOSTS = []
 
 AUTH_USER_MODEL = 'core.User'
+LOGIN_REDIRECT_URL = 'profile'
+LOGOUT_REDIRECT_URL = 'home'
 
 # Application definition
 

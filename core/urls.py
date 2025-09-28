@@ -26,6 +26,10 @@ urlpatterns = [
     path('logout/', auth_views.LogoutView.as_view(next_page='home'), name='logout'),
     path('proposals/create/', views.proposal_create_view, name='proposal_create'),
     path('exchanges/', views.exchanges_list_view, name='exchanges_list'),
-    
+    path('register/', views.register_view, name='register'),
+    path('login/', auth_views.LoginView.as_view(template_name='login.html'), name='login'),
+    path('exchanges/create/from_proposal/<int:proposal_id>/', views.exchange_create_from_proposal, name='exchange_create_from_proposal'),
+    path('skills/add/', views.skill_create_view, name='skill_create'),
+    path('register/', views.register_view, name='register'),
     
 ]

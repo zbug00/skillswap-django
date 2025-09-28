@@ -1,13 +1,18 @@
  <header>
-        <h1>SkillSwap</h1>
+        <h1><b>SkillSwap</b></h1>
         <nav>
-            <a href="{% url 'home' %}">Главная</a>
-            <a href="{% url 'skills_list' %}">Навыки</a>
-            <a href="{% url 'proposals_list' %}">Предложения</a>
+            <a href="{% url 'home' %}"><b>Главная</b></a>
+            <a href="{% url 'skills_list' %}"><b>Навыки</b></a>
+            <a href="{% url 'proposals_list' %}"><b>Предложения</b></a>
             {% if user.is_authenticated %}
-                <a href="{% url 'profile' %}">Профиль</a>
-                <a href="{% url 'logout' %}">Выйти</a>
+                <a href="{% url 'profile' %}"><b>Профиль</b></a>
+            <form method="post" action="{% url 'logout' %}" style="display: inline;">
+                {% csrf_token %}
+                <button type="submit" style="color: #dc3545; background: none; border: none; cursor: pointer; text-decoration: none;">🚪 <b>Выйти</b></button>
+            </form>
             {% else %}
+                <a href="{% url 'login' %}"><b>Войти</b></a>
+                <a href="{% url 'register' %}"><b>Регистрация</b></a>
             {% endif %}
         </nav>
     </header>

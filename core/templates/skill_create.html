@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+
+{% block title %}Добавить навык — SkillSwap{% endblock %}
+
+{% block content %}
+    <h2>➕ Добавить новый навык</h2>
+
+    {% if messages %}
+        {% for message in messages %}
+            <div style="background: #d4edda; color: #155724; padding: 10px; border-radius: 5px; margin-bottom: 20px;">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endif %}
+
+    <form method="post" style="background: white; padding: 30px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
+        {% csrf_token %}
+
+        <div style="margin-bottom: 20px;">
+            <label for="{{ form.name.id_for_label }}" style="font-weight: bold;">{{ form.name.label }}</label>
+            {{ form.name }}
+            {% if form.name.errors %}
+                <div style="color: #dc3545;">{{ form.name.errors }}</div>
+            {% endif %}
+        </div>
+
+        <div style="margin-bottom: 20px;">
+            <label for="{{ form.description.id_for_label }}" style="font-weight: bold;">{{ form.description.label }}</label>
+            {{ form.description }}
+            {% if form.description.errors %}
+                <div style="color: #dc3545;">{{ form.description.errors }}</div>
+            {% endif %}
+        </div>
+
+        <div style="margin-bottom: 20px;">
+            <label for="{{ form.level.id_for_label }}" style="font-weight: bold;">{{ form.level.label }}</label>
+            {{ form.level }}
+            {% if form.level.errors %}
+                <div style="color: #dc3545;">{{ form.level.errors }}</div>
+            {% endif %}
+        </div>
+
+        <div style="margin-bottom: 20px;">
+            <label for="{{ form.category.id_for_label }}" style="font-weight: bold;">{{ form.category.label }}</label>
+            {{ form.category }}
+            {% if form.category.errors %}
+                <div style="color: #dc3545;">{{ form.category.errors }}</div>
+            {% endif %}
+        </div>
+
+        <button type="submit" style="background: #27ae60; color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer;">
+            📤 Добавить навык
+        </button>
+        <a href="{% url 'profile' %}" style="margin-left: 10px; color: #6c757d;">← Назад в профиль</a>
+    </form>
+{% endblock %}

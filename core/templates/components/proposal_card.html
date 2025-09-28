@@ -1,0 +1,26 @@
+<div class="proposal-card">
+    <h3>👤 {{ proposal.user.full_name }}</h3>
+    <p><strong>Предлагает:</strong> {{ proposal.skill_offered.name }} ({{ proposal.skill_offered.get_level_display }})</p>
+    <p><strong>Хочет взамен:</strong> {{ proposal.skill_wanted.name }} ({{ proposal.skill_wanted.get_level_display }})</p>
+    <p><em>Формат:</em> {{ proposal.get_format_display }} | Создано: {{ proposal.created_at|date:"d.m.Y H:i" }}</p>
+    {% if proposal.description %}
+        <p><strong>Описание:</strong> {{ proposal.description }}</p>
+    {% endif %}
+    {% if user.is_authenticated and proposal.user != user %}
+        <a href="{% url 'exchange_create_from_proposal' proposal.id %}" style="color: #27ae60;">🔄 Откликнуться</a>
+    {% elif user.is_authenticated and proposal.user == user %}
+        <span style="color: #95a5a6;">(это ваше предложение)</span>
+    {% else %}
+        <a href="{% url 'login' %}" style="color: #2980b9;">Войти, чтобы откликнуться</a>
+    {% endif %}
+</div>
+
+<style>
+    .proposal-card {
+        background: white;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        margin-bottom: 20px;
+    }
+</style>

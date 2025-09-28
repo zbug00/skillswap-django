@@ -6,20 +6,20 @@
     <h2>Все предложения обмена</h2>
 
     {% if proposals %}
-        <div style="display: flex; flex-direction: column; gap: 20px;">
+        <div class="proposal-list">
             {% for proposal in proposals %}
-                <div style="background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
-                    <h3>👤 {{ proposal.user.full_name }}</h3>
-                    <p><strong>Предлагает:</strong> {{ proposal.skill_offered.name }} ({{ proposal.skill_offered.get_level_display }})</p>
-                    <p><strong>Хочет взамен:</strong> {{ proposal.skill_wanted.name }} ({{ proposal.skill_wanted.get_level_display }})</p>
-                    <p><em>Формат:</em> {{ proposal.get_format_display }} | Создано: {{ proposal.created_at|date:"d.m.Y H:i" }}</p>
-                    {% if proposal.description %}
-                        <p><strong>Описание:</strong> {{ proposal.description }}</p>
-                    {% endif %}
-                </div>
+                {% include 'components/proposal_card.html' with proposal=proposal %}
             {% endfor %}
         </div>
     {% else %}
         <p>Пока нет предложений. <a href="{% url 'home' %}">Вернуться на главную</a>.</p>
     {% endif %}
 {% endblock %}
+
+<style>
+    .proposal-list {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+    }
+</style>

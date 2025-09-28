@@ -6,19 +6,21 @@
     <h2>Добро пожаловать на SkillSwap!</h2>
     <p>Здесь ты можешь обмениваться навыками без денег — учись, делись, меняйся.</p>
 
+    {% url 'skills_list' as skills_url %}
+    {% url 'proposal_create' as create_proposal_url %}
+    {% url 'exchanges_list' as exchanges_url %}
+
     <div class="slide-list">
-        {% include "components/test.html" with title="🎓 Учись" text="Найди того, кто научит тебя новому навыку." sub_info="Посмотреть навыки" %}
-        {% include "components/test.html" with title="🤝 Делись" text="Предложи свой навык другим — получи что-то взамен." sub_info="Создать предложение" %}
-        {% include "components/test.html" with title="🌟 Меняйся" text="Обменивайтесь знаниями — развивайтесь вместе." sub_info="Мои обмены" %}
+        {% include "components/feature_card.html" with title="🎓 Учись" text="Найди того, кто научит тебя новому навыку." sub_info="Посмотреть навыки" link_url=skills_url %}
+        {% include "components/feature_card.html" with title="🤝 Делись" text="Предложи свой навык другим — получи что-то взамен." sub_info="Создать предложение" link_url=create_proposal_url %}
+        {% include "components/feature_card.html" with title="🌟 Меняйся" text="Обменивайтесь знаниями — развивайтесь вместе." sub_info="Мои обмены" link_url=exchanges_url %}
     </div>
-<style>
-    .slide-list {
-        display: flex;
-        gap: 20px;
-        margin-top: 30px;
-    }
-</style>
+
+    <style>
+        .slide-list {
+            display: flex;
+            gap: 20px;
+            margin-top: 30px;
+        }
+    </style>
 {% endblock %}
-
-
-

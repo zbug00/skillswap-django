@@ -1,0 +1,9 @@
+<div class="skill-card">
+    <h3>{{ skill.name }}</h3>
+    <p><strong>Уровень:</strong> {{ skill.get_level_display }}</p>
+    <p><strong>Категория:</strong> {{ skill.category.name }}</p>
+    {% if skill.description %}
+        <p><em>{{ skill.description }}</em></p>
+    {% endif %}
+    <a href="{% url 'proposal_create' %}?skill_wanted={{ skill.id }}" style="color: #2980b9;">Откликнуться</a>
+</div>

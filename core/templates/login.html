@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+
+{% block title %}Вход — SkillSwap{% endblock %}
+
+{% block content %}
+    <h2>🔑 Вход в аккаунт</h2>
+    <p>Войди, чтобы получить доступ к личному кабинету.</p>
+
+    {% if messages %}
+        {% for message in messages %}
+            <div style="background: #f8d7da; color: #721c24; padding: 10px; border-radius: 5px; margin-bottom: 20px;">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endif %}
+
+    <form method="post" style="background: white; padding: 30px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
+        {% csrf_token %}
+
+        <div style="margin-bottom: 20px;">
+            <label for="{{ form.username.id_for_label }}" style="font-weight: bold;">Email</label>
+            <input type="email" name="username" id="{{ form.username.id_for_label }}" value="{{ form.username.value|default:'' }}" required placeholder="your@example.com" style="width: 100%; padding: 8px; margin-top: 5px;">
+            {% if form.username.errors %}
+                <div style="color: #dc3545;">{{ form.username.errors }}</div>
+            {% endif %}
+        </div>
+
+        <div style="margin-bottom: 20px;">
+            <label for="{{ form.password.id_for_label }}" style="font-weight: bold;">Пароль</label>
+            <input type="password" name="password" id="{{ form.password.id_for_label }}" required placeholder="••••••••" style="width: 100%; padding: 8px; margin-top: 5px;">
+            {% if form.password.errors %}
+                <div style="color: #dc3545;">{{ form.password.errors }}</div>
+            {% endif %}
+        </div>
+
+        <button type="submit" style="background: #2980b9; color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer;">
+            🔐 Войти
+        </button>
+        <a href="{% url 'register' %}" style="margin-left: 10px; color: #6c757d;">Нет аккаунта? Регистрация</a>
+    </form>
+{% endblock %}

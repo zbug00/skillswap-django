@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+
+{% block title %}Навыки — SkillSwap{% endblock %}
+
+{% block content %}
+    <h2>🎓 Все навыки</h2>
+
+    {% if skills %}
+        <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px;">
+            {% for skill in skills %}
+                {% include 'components/skill_card.html' with skill=skill %}
+            {% endfor %}
+        </div>
+    {% else %}
+        <p>Навыков пока нет. <a href="{% url 'home' %}">Вернуться на главную</a>.</p>
+    {% endif %}
+{% endblock %}
+
+<style>
+    .skill-card {
+        background: white;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+</style>
