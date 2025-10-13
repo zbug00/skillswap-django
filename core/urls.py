@@ -31,6 +31,4 @@ urlpatterns = [
     path('exchanges/create/from_proposal/<int:proposal_id>/', views.exchange_create_from_proposal, name='exchange_create_from_proposal'),
     path('skills/add/', views.skill_create_view, name='skill_create'),
     path('register/', views.register_view, name='register'),
-    path('newlogin/',auth_views.LoginView.as_view(template_name='new_login.html'), name='new_login'),
-    
 ]

@@ -1,57 +1,89 @@
 {% extends 'base.html' %}
+{% load static %}
 
 {% block title %}Регистрация — SkillSwap{% endblock %}
 
 {% block content %}
-    <h2>📝 Регистрация</h2>
-    <p>Присоединяйся к сообществу SkillSwap — учи, делись, меняйся!</p>
+<div class="registration-container">
+    <div class="registration-card">
+        <div class="registration-header">
+            <h2>Регистрация</h2>
+            <p>Присоединяйся к сообществу SkillSwap — учи, делись, меняйся!</p>
+        </div>
 
-    {% if messages %}
-        {% for message in messages %}
-            <div style="background: #d4edda; color: #155724; padding: 10px; border-radius: 5px; margin-bottom: 20px;">
-                {{ message }}
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-success">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+
+        <form method="post" class="registration-form" id="registrationForm" novalidate>
+            {% csrf_token %}
+
+            <div class="form-group">
+                <div class="input-wrapper">
+                    <input type="email" id="email" name="email" value="{{ form.email.value|default:'' }}" required autocomplete="email">
+                    <label for="email">Email адрес</label>
+                </div>
+                <span class="error-message" id="emailError"></span>
+                {% if form.email.errors %}
+                    <span class="error-message">{{ form.email.errors }}</span>
+                {% endif %}
             </div>
-        {% endfor %}
-    {% endif %}
 
-    <form method="post" style="background: white; padding: 30px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
-        {% csrf_token %}
+            <div class="form-group">
+                <div class="input-wrapper">
+                    <input type="text" id="full_name" name="full_name" value="{{ form.full_name.value|default:'' }}" required autocomplete="name">
+                    <label for="full_name">Полное имя</label>
+                </div>
+                <span class="error-message" id="full_nameError"></span>
+                {% if form.full_name.errors %}
+                    <span class="error-message">{{ form.full_name.errors }}</span>
+                {% endif %}
+            </div>
 
-        <div style="margin-bottom: 20px;">
-            <label for="{{ form.email.id_for_label }}" style="font-weight: bold;">{{ form.email.label }}</label>
-            {{ form.email }}
-            {% if form.email.errors %}
-                <div style="color: #dc3545;">{{ form.email.errors }}</div>
-            {% endif %}
+            <div class="form-group">
+                <div class="input-wrapper password-wrapper">
+                    <input type="password" id="password1" name="password1" required autocomplete="new-password">
+                    <label for="password1">Пароль</label>
+                    <button type="button" class="password-toggle" id="passwordToggle1" aria-label="Показать/скрыть пароль">
+                        <span class="eye-icon"></span>
+                    </button>
+                </div>
+                <span class="error-message" id="password1Error"></span>
+                {% if form.password1.errors %}
+                    <span class="error-message">{{ form.password1.errors }}</span>
+                {% endif %}
+            </div>
+
+            <div class="form-group">
+                <div class="input-wrapper password-wrapper">
+                    <input type="password" id="password2" name="password2" required autocomplete="new-password">
+                    <label for="password2">Подтвердите пароль</label>
+                    <button type="button" class="password-toggle" id="passwordToggle2" aria-label="Показать/скрыть пароль">
+                        <span class="eye-icon"></span>
+                    </button>
+                </div>
+                <span class="error-message" id="password2Error"></span>
+                {% if form.password2.errors %}
+                    <span class="error-message">{{ form.password2.errors }}</span>
+                {% endif %}
+            </div>
+
+            <button type="submit" class="registration-btn">
+                <span class="btn-text">Зарегистрироваться</span>
+                <span class="btn-loader"></span>
+            </button>
+        </form>
+
+        <div class="login-link">
+            <p>Уже есть аккаунт? <a href="{% url 'login' %}">Войти</a></p>
         </div>
+    </div>
+</div>
 
-        <div style="margin-bottom: 20px;">
-            <label for="{{ form.full_name.id_for_label }}" style="font-weight: bold;">{{ form.full_name.label }}</label>
-            {{ form.full_name }}
-            {% if form.full_name.errors %}
-                <div style="color: #dc3545;">{{ form.full_name.errors }}</div>
-            {% endif %}
-        </div>
-
-        <div style="margin-bottom: 20px;">
-            <label for="{{ form.password1.id_for_label }}" style="font-weight: bold;">{{ form.password1.label }}</label>
-            {{ form.password1 }}
-            {% if form.password1.errors %}
-                <div style="color: #dc3545;">{{ form.password1.errors }}</div>
-            {% endif %}
-        </div>
-
-        <div style="margin-bottom: 20px;">
-            <label for="{{ form.password2.id_for_label }}" style="font-weight: bold;">{{ form.password2.label }}</label>
-            {{ form.password2 }}
-            {% if form.password2.errors %}
-                <div style="color: #dc3545;">{{ form.password2.errors }}</div>
-            {% endif %}
-        </div>
-
-        <button type="submit" style="background: #2980b9; color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer;">
-            📤 Зарегистрироваться
-        </button>
-        <a href="{% url 'login' %}" style="margin-left: 10px; color: #6c757d;">Уже есть аккаунт? Войти</a>
-    </form>
+<link rel="stylesheet" href="{% static 'css/registration.css' %}">
+<script src="{% static 'js/registration.js' %}"></script>
 {% endblock %}
