@@ -11,91 +11,157 @@ class BasicLoginForm {
     }
     
     init() {
-        // Initialize shared utilities
-        FormUtils.addSharedAnimations();
-        FormUtils.setupFloatingLabels(this.form);
-        FormUtils.setupPasswordToggle(this.passwordInput, this.passwordToggle);
+        // Initialize utilities
+        this.setupFloatingLabels();
+        this.setupPasswordToggle();
         
         // Add event listeners
         this.form.addEventListener('submit', this.handleSubmit.bind(this));
-        this.emailInput.addEventListener('input', () => this.validateField('email'));
-        this.passwordInput.addEventListener('input', () => this.validateField('password'));
-        
-        // Add entrance animation
-        FormUtils.addEntranceAnimation(this.form.closest('.login-card'), 100);
+        this.emailInput.addEventListener('blur', () => this.validateField('email'));
+        this.passwordInput.addEventListener('blur', () => this.validateField('password'));
+    }
+    
+    setupFloatingLabels() {
+        const inputs = this.form.querySelectorAll('input');
+        inputs.forEach(input => {
+            // Check initial value
+            if (input.value.trim() !== '') {
+                input.classList.add('has-value');
+            }
+            
+            input.addEventListener('input', () => {
+                if (input.value.trim() !== '') {
+                    input.classList.add('has-value');
+                } else {
+                    input.classList.remove('has-value');
+                }
+            });
+        });
+    }
+    
+    setupPasswordToggle() {
+        if (this.passwordToggle) {
+            this.passwordToggle.addEventListener('click', () => {
+                const type = this.passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+                this.passwordInput.setAttribute('type', type);
+                this.passwordToggle.querySelector('.eye-icon').classList.toggle('show-password');
+            });
+        }
     }
     
     validateField(fieldName) {
         const input = document.getElementById(fieldName);
         const value = input.value.trim();
-        let validation;
+        const formGroup = input.closest('.form-group');
+        const errorElement = document.getElementById(fieldName + 'Error');
         
         // Clear previous errors
-        FormUtils.clearError(fieldName);
+        this.clearError(fieldName);
         
-        // Validate based on field type
-        if (fieldName === 'email') {
-            validation = FormUtils.validateEmail(value);
-        } else if (fieldName === 'password') {
-            validation = FormUtils.validatePassword(value);
+        let isValid = true;
+        let message = '';
+        
+        // Validate required fields
+        if (!value) {
+            isValid = false;
+            message = 'Это поле обязательно для заполнения';
+        } else if (fieldName === 'email' && !this.validateEmail(value)) {
+            isValid = false;
+            message = 'Введите корректный email адрес';
+        } else if (fieldName === 'password' && value.length < 1) {
+            isValid = false;
+            message = 'Пароль обязателен для заполнения';
         }
         
-        if (!validation.isValid && value !== '') {
-            FormUtils.showError(fieldName, validation.message);
+        if (!isValid) {
+            this.showError(fieldName, message);
             return false;
-        } else if (validation.isValid) {
-            FormUtils.showSuccess(fieldName);
-            return true;
         }
         
         return true;
     }
     
+    clearError(fieldName) {
+        const input = document.getElementById(fieldName);
+        const errorElement = document.getElementById(fieldName + 'Error');
+        const formGroup = input.closest('.form-group');
+        
+        if (formGroup) formGroup.classList.remove('error');
+        if (errorElement) {
+            errorElement.textContent = '';
+            errorElement.classList.remove('show');
+        }
+    }
+    
+    showError(fieldName, message) {
+        const input = document.getElementById(fieldName);
+        const errorElement = document.getElementById(fieldName + 'Error');
+        const formGroup = input.closest('.form-group');
+        
+        if (formGroup) formGroup.classList.add('error');
+        if (errorElement) {
+            errorElement.textContent = message;
+            errorElement.classList.add('show');
+        }
+    }
+    
+    validateEmail(email) {
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return emailRegex.test(email);
+    }
+    
     async handleSubmit(e) {
         e.preventDefault();
-        
-        const email = this.emailInput.value.trim();
-        const password = this.passwordInput.value.trim();
         
         // Validate all fields
         const emailValid = this.validateField('email');
         const passwordValid = this.validateField('password');
         
         if (!emailValid || !passwordValid) {
-            FormUtils.showNotification('Please fix the errors below', 'error', this.form);
+            // Focus on first invalid field
+            if (!emailValid) {
+                this.emailInput.focus();
+            } else if (!passwordValid) {
+                this.passwordInput.focus();
+            }
             return;
         }
         
         // Show loading state
         const submitBtn = this.form.querySelector('.login-btn');
-        submitBtn.classList.add('loading');
+        if (submitBtn) submitBtn.classList.add('loading');
         
         try {
-            // Simulate login process
-            await FormUtils.simulateLogin(email, password);
+            // Simulate API call
+            await new Promise(resolve => setTimeout(resolve, 1000));
             
-            // Show success state
+            // For demo purposes - always succeed
+            // In real app, you would make actual API call here
             this.showSuccess();
             
         } catch (error) {
-            // Show error notification
-            FormUtils.showNotification(error.message, 'error', this.form);
+            console.error('Login error:', error);
+            this.showError('email', 'Ошибка входа. Проверьте данные.');
         } finally {
             // Remove loading state
-            submitBtn.classList.remove('loading');
+            if (submitBtn) submitBtn.classList.remove('loading');
         }
     }
     
     showSuccess() {
         // Hide the form
-        this.form.style.display = 'none';
+        if (this.form) this.form.style.display = 'none';
         
         // Show success message
-        this.successMessage.classList.add('show');
+        if (this.successMessage) {
+            this.successMessage.classList.add('show');
+        }
         
         // Simulate redirect after 2 seconds
         setTimeout(() => {
-            FormUtils.showNotification('Redirecting to dashboard...', 'success', this.successMessage);
+            // In real app, you would redirect here
+            // window.location.href = '/dashboard';
+            console.log('Redirecting to dashboard...');
         }, 2000);
     }
 }
