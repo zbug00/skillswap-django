@@ -1,41 +1,72 @@
 {% extends 'base.html' %}
+{% load static %}
 
 {% block title %}Вход — SkillSwap{% endblock %}
 
 {% block content %}
-    <h2>🔑 Вход в аккаунт</h2>
-    <p>Войди, чтобы получить доступ к личному кабинету.</p>
+<div class="login-container">
+    <div class="login-card">
+        <div class="login-header">
+            <h2>🔑 Вход в аккаунт</h2>
+            <p>Войди, чтобы получить доступ к личному кабинету</p>
+        </div>
 
-    {% if messages %}
-        {% for message in messages %}
-            <div style="background: #f8d7da; color: #721c24; padding: 10px; border-radius: 5px; margin-bottom: 20px;">
-                {{ message }}
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-error">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+
+        <form method="post" class="login-form" id="loginForm" novalidate>
+            {% csrf_token %}
+
+            <div class="form-group">
+                <div class="input-wrapper">
+                    <input type="email" id="email" name="username" value="{{ form.username.value|default:'' }}" required autocomplete="email">
+                    <label for="email">Email адрес</label>
+                </div>
+                {% if form.username.errors %}
+                    <span class="error-message">{{ form.username.errors }}</span>
+                {% endif %}
             </div>
-        {% endfor %}
-    {% endif %}
 
-    <form method="post" style="background: white; padding: 30px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
-        {% csrf_token %}
+            <div class="form-group">
+                <div class="input-wrapper password-wrapper">
+                    <input type="password" id="password" name="password" required autocomplete="current-password">
+                    <label for="password">Пароль</label>
+                    <button type="button" class="password-toggle" id="passwordToggle" aria-label="Показать/скрыть пароль">
+                        <span class="eye-icon"></span>
+                    </button>
+                </div>
+                {% if form.password.errors %}
+                    <span class="error-message">{{ form.password.errors }}</span>
+                {% endif %}
+            </div>
 
-        <div style="margin-bottom: 20px;">
-            <label for="{{ form.username.id_for_label }}" style="font-weight: bold;">Email</label>
-            <input type="email" name="username" id="{{ form.username.id_for_label }}" value="{{ form.username.value|default:'' }}" required placeholder="your@example.com" style="width: 100%; padding: 8px; margin-top: 5px;">
-            {% if form.username.errors %}
-                <div style="color: #dc3545;">{{ form.username.errors }}</div>
-            {% endif %}
+            <div class="form-options">
+                <label class="remember-wrapper">
+                    <input type="checkbox" id="remember" name="remember">
+                    <span class="checkbox-label">
+                        <span class="checkmark"></span>
+                        Запомнить меня
+                    </span>
+                </label>
+                <a href="#" class="forgot-password">Забыли пароль?</a>
+            </div>
+
+            <button type="submit" class="login-btn">
+                <span class="btn-text">🔐 Войти</span>
+                <span class="btn-loader"></span>
+            </button>
+        </form>
+
+        <div class="signup-link">
+            <p>Нет аккаунта? <a href="{% url 'register' %}">Создать аккаунт</a></p>
         </div>
-
-        <div style="margin-bottom: 20px;">
-            <label for="{{ form.password.id_for_label }}" style="font-weight: bold;">Пароль</label>
-            <input type="password" name="password" id="{{ form.password.id_for_label }}" required placeholder="••••••••" style="width: 100%; padding: 8px; margin-top: 5px;">
-            {% if form.password.errors %}
-                <div style="color: #dc3545;">{{ form.password.errors }}</div>
-            {% endif %}
-        </div>
-
-        <button type="submit" style="background: #2980b9; color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer;">
-            🔐 Войти
-        </button>
-        <a href="{% url 'register' %}" style="margin-left: 10px; color: #6c757d;">Нет аккаунта? Регистрация</a>
-    </form>
+    </div>
+</div>
+<script src="{% static 'js/login.js' %}"></script>
+<link rel="stylesheet" href="{% static 'css/login.css' %}">
 {% endblock %}
