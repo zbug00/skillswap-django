@@ -20,16 +20,40 @@ class BasicLoginForm {
         this.emailInput.addEventListener('blur', () => this.validateField('email'));
         this.passwordInput.addEventListener('blur', () => this.validateField('password'));
         
-        // Real-time validation while typing
+        // Real-time validation and floating labels while typing
         this.emailInput.addEventListener('input', () => {
+            this.handleInput(this.emailInput);
             if (this.emailInput.value.trim()) {
                 this.clearError('email');
             }
         });
         
         this.passwordInput.addEventListener('input', () => {
+            this.handleInput(this.passwordInput);
             if (this.passwordInput.value.trim()) {
                 this.clearError('password');
+            }
+        });
+        
+        // Handle focus events for floating labels
+        this.emailInput.addEventListener('focus', () => {
+            this.emailInput.classList.add('has-value');
+        });
+        
+        this.passwordInput.addEventListener('focus', () => {
+            this.passwordInput.classList.add('has-value');
+        });
+        
+        // Handle blur events - remove has-value if empty
+        this.emailInput.addEventListener('blur', () => {
+            if (this.emailInput.value.trim() === '') {
+                this.emailInput.classList.remove('has-value');
+            }
+        });
+        
+        this.passwordInput.addEventListener('blur', () => {
+            if (this.passwordInput.value.trim() === '') {
+                this.passwordInput.classList.remove('has-value');
             }
         });
     }
@@ -37,20 +61,26 @@ class BasicLoginForm {
     setupFloatingLabels() {
         const inputs = [this.emailInput, this.passwordInput];
         inputs.forEach(input => {
-            if (input && input.value.trim() !== '') {
-                input.classList.add('has-value');
-            }
-            
             if (input) {
+                // Check initial value and set has-value class if needed
+                if (input.value.trim() !== '') {
+                    input.classList.add('has-value');
+                }
+                
+                // Handle input events
                 input.addEventListener('input', () => {
-                    if (input.value.trim() !== '') {
-                        input.classList.add('has-value');
-                    } else {
-                        input.classList.remove('has-value');
-                    }
+                    this.handleInput(input);
                 });
             }
         });
+    }
+    
+    handleInput(input) {
+        if (input.value.trim() !== '') {
+            input.classList.add('has-value');
+        } else {
+            input.classList.remove('has-value');
+        }
     }
     
     setupPasswordToggle() {
@@ -148,8 +178,6 @@ class BasicLoginForm {
                 }, 3000);
             }
         }
-        
-        // Form will be submitted to Django if validation passes
     }
 }
 

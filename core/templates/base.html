@@ -5,35 +5,45 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}SkillSwap — Учись. Делись. Меняйся.{% endblock %}</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: #f9f9f9;
-        }
-        main {
-            padding: 2rem;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-        .skill-card {
-            background: white;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-        }
-    </style>
+    
+    <link rel="stylesheet" href="{% static 'css/components/global/header.css' %}">
+    <link rel="stylesheet" href="{% static 'css/components/global/footer.css' %}">
+    <link rel="stylesheet" href="{% static 'css/base.css' %}"> 
+    
+    {% block extra_css %}{% endblock %}
+    
+        <style>
+            /* Fallback styles - только самое необходимое */
+            body {
+                font-family: Arial, sans-serif;
+                margin: 0;
+                padding: 0;
+                background-color: #f9f9f9;
+            }
+            
+            main {
+                padding: 1rem;
+            }
+            
+            .skill-card {
+                background: white;
+                padding: 1rem;
+                margin: 1rem 0;
+            }
+        </style>
 </head>
 <body>
-
     {% include "components/global/header.html" %}   
 
-    <main>
+    <main class="main-content">
         {% block content %}
         {% endblock %}
     </main>
 
-    {% include "components/global/footer.html" %}   
+    {% include "components/global/footer.html" %}
+
+    <script src="{% static 'js/components/global/header.js' %}"></script>
+    
+    {% block extra_js %}{% endblock %}
 </body>
 </html>

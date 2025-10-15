@@ -1,13 +1,11 @@
-// Registration Form Script
-class RegistrationForm {
+// Skill Create Form Script
+class SkillCreateForm {
     constructor() {
-        this.form = document.getElementById('registrationForm');
-        this.emailInput = document.getElementById('email');
-        this.fullNameInput = document.getElementById('full_name');
-        this.password1Input = document.getElementById('password1');
-        this.password2Input = document.getElementById('password2');
-        this.passwordToggle1 = document.getElementById('passwordToggle1');
-        this.passwordToggle2 = document.getElementById('passwordToggle2');
+        this.form = document.getElementById('skillCreateForm');
+        this.nameInput = document.getElementById('name');
+        this.descriptionInput = document.getElementById('description');
+        this.levelInput = document.getElementById('level');
+        this.categoryInput = document.getElementById('category');
         
         if (this.form) {
             this.init();
@@ -16,21 +14,21 @@ class RegistrationForm {
     
     init() {
         this.setupFloatingLabels();
-        this.setupPasswordToggles();
         
         // Add event listeners for validation
         this.form.addEventListener('submit', this.handleSubmit.bind(this));
         
         // Field validation on blur
-        [this.emailInput, this.fullNameInput, this.password1Input, this.password2Input].forEach(input => {
+        [this.nameInput, this.descriptionInput, this.levelInput, this.categoryInput].forEach(input => {
             if (input) {
                 input.addEventListener('blur', () => this.validateField(input.id));
                 input.addEventListener('input', () => this.handleInput(input));
+                input.addEventListener('change', () => this.handleInput(input)); // Для select
             }
         });
         
         // Real-time validation while typing
-        [this.emailInput, this.fullNameInput, this.password1Input, this.password2Input].forEach(input => {
+        [this.nameInput, this.descriptionInput].forEach(input => {
             if (input) {
                 input.addEventListener('input', () => {
                     if (input.value.trim()) {
@@ -40,18 +38,21 @@ class RegistrationForm {
             }
         });
         
-        // Confirm password validation when password1 changes
-        if (this.password1Input && this.password2Input) {
-            this.password1Input.addEventListener('input', () => {
-                if (this.password2Input.value.trim()) {
-                    this.validateField('password2');
-                }
-            });
-        }
+        // Для select элементов - проверка при изменении
+        [this.levelInput, this.categoryInput].forEach(select => {
+            if (select) {
+                select.addEventListener('change', () => {
+                    this.handleInput(select);
+                    if (select.value.trim()) {
+                        this.clearError(select.id);
+                    }
+                });
+            }
+        });
     }
     
     setupFloatingLabels() {
-        const inputs = [this.emailInput, this.fullNameInput, this.password1Input, this.password2Input];
+        const inputs = [this.nameInput, this.descriptionInput, this.levelInput, this.categoryInput];
         inputs.forEach(input => {
             if (input) {
                 // Check initial value and set has-value class if needed
@@ -64,6 +65,13 @@ class RegistrationForm {
                     this.handleInput(input);
                 });
                 
+                // Handle change events for select
+                if (input.tagName === 'SELECT') {
+                    input.addEventListener('change', () => {
+                        this.handleInput(input);
+                    });
+                }
+                
                 // Handle focus events
                 input.addEventListener('focus', () => {
                     input.classList.add('has-value');
@@ -75,6 +83,11 @@ class RegistrationForm {
                         input.classList.remove('has-value');
                     }
                 });
+                
+                // Для select - сразу проверяем начальное значение
+                if (input.tagName === 'SELECT' && input.value !== '') {
+                    input.classList.add('has-value');
+                }
             }
         });
     }
@@ -84,32 +97,6 @@ class RegistrationForm {
             input.classList.add('has-value');
         } else {
             input.classList.remove('has-value');
-        }
-    }
-    
-    setupPasswordToggles() {
-        // Password1 toggle
-        if (this.passwordToggle1 && this.password1Input) {
-            this.passwordToggle1.addEventListener('click', () => {
-                const type = this.password1Input.getAttribute('type') === 'password' ? 'text' : 'password';
-                this.password1Input.setAttribute('type', type);
-                const eyeIcon = this.passwordToggle1.querySelector('.eye-icon');
-                if (eyeIcon) {
-                    eyeIcon.classList.toggle('show-password');
-                }
-            });
-        }
-        
-        // Password2 toggle
-        if (this.passwordToggle2 && this.password2Input) {
-            this.passwordToggle2.addEventListener('click', () => {
-                const type = this.password2Input.getAttribute('type') === 'password' ? 'text' : 'password';
-                this.password2Input.setAttribute('type', type);
-                const eyeIcon = this.passwordToggle2.querySelector('.eye-icon');
-                if (eyeIcon) {
-                    eyeIcon.classList.toggle('show-password');
-                }
-            });
         }
     }
     
@@ -127,15 +114,12 @@ class RegistrationForm {
         if (!value) {
             isValid = false;
             message = 'Это поле обязательно для заполнения';
-        } else if (fieldName === 'email' && !this.validateEmail(value)) {
+        } else if (fieldName === 'name' && value.length < 2) {
             isValid = false;
-            message = 'Введите корректный email адрес';
-        } else if (fieldName === 'password1' && value.length < 8) {
+            message = 'Название навыка должно содержать минимум 2 символа';
+        } else if (fieldName === 'description' && value.length < 10) {
             isValid = false;
-            message = 'Пароль должен содержать минимум 8 символов';
-        } else if (fieldName === 'password2' && value !== this.password1Input.value) {
-            isValid = false;
-            message = 'Пароли не совпадают';
+            message = 'Описание должно содержать минимум 10 символов';
         }
         
         if (!isValid) {
@@ -170,34 +154,29 @@ class RegistrationForm {
         }
     }
     
-    validateEmail(email) {
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        return emailRegex.test(email);
-    }
-    
     handleSubmit(e) {
         // Validate all fields
-        const emailValid = this.validateField('email');
-        const fullNameValid = this.validateField('full_name');
-        const password1Valid = this.validateField('password1');
-        const password2Valid = this.validateField('password2');
+        const nameValid = this.validateField('name');
+        const descriptionValid = this.validateField('description');
+        const levelValid = this.validateField('level');
+        const categoryValid = this.validateField('category');
         
-        if (!emailValid || !fullNameValid || !password1Valid || !password2Valid) {
+        if (!nameValid || !descriptionValid || !levelValid || !categoryValid) {
             e.preventDefault(); // Prevent form submission only if validation fails
             
             // Focus on first invalid field
-            if (!emailValid) {
-                this.emailInput.focus();
-            } else if (!fullNameValid) {
-                this.fullNameInput.focus();
-            } else if (!password1Valid) {
-                this.password1Input.focus();
-            } else if (!password2Valid) {
-                this.password2Input.focus();
+            if (!nameValid) {
+                this.nameInput.focus();
+            } else if (!descriptionValid) {
+                this.descriptionInput.focus();
+            } else if (!levelValid) {
+                this.levelInput.focus();
+            } else if (!categoryValid) {
+                this.categoryInput.focus();
             }
         } else {
             // If validation passes, add loading state but allow form submission
-            const submitBtn = this.form.querySelector('.registration-btn');
+            const submitBtn = this.form.querySelector('.skill-create-btn');
             if (submitBtn) {
                 submitBtn.classList.add('loading');
                 
@@ -212,5 +191,5 @@ class RegistrationForm {
 
 // Initialize the form when DOM is loaded
 document.addEventListener('DOMContentLoaded', () => {
-    new RegistrationForm();
+    new SkillCreateForm();
 });

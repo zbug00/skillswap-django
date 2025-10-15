@@ -1,64 +1,125 @@
 {% extends 'base.html' %}
+{% load static %}
 
 {% block title %}Создать предложение — SkillSwap{% endblock %}
 
 {% block content %}
-    <h2>➕ Создать предложение обмена</h2>
+<div class="proposal-create-container">
+    <div class="proposal-create-card">
+        <div class="proposal-create-header">
+            <h2>➕ Создать предложение обмена</h2>
+        </div>
 
-    {% if messages %}
-        {% for message in messages %}
-            <div style="background: #d4edda; color: #155724; padding: 10px; border-radius: 5px; margin-bottom: 20px;">
-                {{ message }}
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-success">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+
+        {% if form.non_field_errors %}
+            <div class="alert alert-error">
+                {% for error in form.non_field_errors %}
+                    {{ error }}
+                {% endfor %}
             </div>
-        {% endfor %}
-    {% endif %}
+        {% endif %}
 
-    <form method="post" style="background: white; padding: 30px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
-        {% csrf_token %}
+        <form method="post" class="proposal-create-form" id="proposalCreateForm" novalidate>
+            {% csrf_token %}
 
-        <div style="margin-bottom: 20px;">
-            <label for="{{ form.skill_offered.id_for_label }}" style="font-weight: bold;">{{ form.skill_offered.label }}</label>
-            {{ form.skill_offered }}
-            {% if form.skill_offered.errors %}
-                <div style="color: #dc3545;">{{ form.skill_offered.errors }}</div>
-            {% endif %}
+            <div class="form-group">
+                <div class="input-wrapper">
+                    <select id="skill_offered" name="skill_offered" required>
+                        <option value="" disabled selected>Выберите навык для обмена</option>
+                        {% for skill in form.skill_offered.field.queryset %}
+                            <option value="{{ skill.id }}" {% if form.skill_offered.value == skill.id %}selected{% endif %}>{{ skill.name }} ({{ skill.get_level_display }})</option>
+                        {% endfor %}
+                    </select>
+                    <label for="skill_offered">Навык для обмена</label>
+                </div>
+                <span class="error-message" id="skill_offeredError"></span>
+                {% if form.skill_offered.errors %}
+                    <span class="error-message">{{ form.skill_offered.errors }}</span>
+                {% endif %}
+            </div>
+
+            <div class="form-group">
+                <div class="input-wrapper">
+                    <select id="skill_wanted" name="skill_wanted" required>
+                        <option value="" disabled selected>Выберите желаемый навык</option>
+                        {% for skill in form.skill_wanted.field.queryset %}
+                            <option value="{{ skill.id }}" {% if form.skill_wanted.value == skill.id %}selected{% endif %}>{{ skill.name }} ({{ skill.get_level_display }})</option>
+                        {% endfor %}
+                    </select>
+                    <label for="skill_wanted">Желаемый навык</label>
+                </div>
+                <span class="error-message" id="skill_wantedError"></span>
+                {% if form.skill_wanted.errors %}
+                    <span class="error-message">{{ form.skill_wanted.errors }}</span>
+                {% endif %}
+            </div>
+
+            <div class="form-group">
+                <div class="input-wrapper">
+                    <select id="format" name="format" required>
+                        <option value="" disabled selected>Выберите формат обмена</option>
+                        {% for value, label in form.format.field.choices %}
+                            {% if value %}
+                                <option value="{{ value }}" {% if form.format.value == value %}selected{% endif %}>{{ label }}</option>
+                            {% endif %}
+                        {% endfor %}
+                    </select>
+                    <label for="format">Формат обмена</label>
+                </div>
+                <span class="error-message" id="formatError"></span>
+                {% if form.format.errors %}
+                    <span class="error-message">{{ form.format.errors }}</span>
+                {% endif %}
+            </div>
+
+            <div class="form-group">
+                <div class="input-wrapper">
+                    <select id="deadlines" name="deadlines" required>
+                        <option value="" disabled selected>Выберите сроки</option>
+                        {% for value, label in form.deadlines.field.choices %}
+                            {% if value %}
+                                <option value="{{ value }}" {% if form.deadlines.value == value %}selected{% endif %}>{{ label }}</option>
+                            {% endif %}
+                        {% endfor %}
+                    </select>
+                    <label for="deadlines">Сроки обмена</label>
+                </div>
+                <span class="error-message" id="deadlinesError"></span>
+                {% if form.deadlines.errors %}
+                    <span class="error-message">{{ form.deadlines.errors }}</span>
+                {% endif %}
+            </div>
+
+            <div class="form-group">
+                <div class="input-wrapper">
+                    <textarea id="description" name="description" required>{{ form.description.value|default:'' }}</textarea>
+                    <label for="description">Описание предложения</label>
+                </div>
+                <span class="error-message" id="descriptionError"></span>
+                {% if form.description.errors %}
+                    <span class="error-message">{{ form.description.errors }}</span>
+                {% endif %}
+            </div>
+
+            <button type="submit" class="proposal-create-btn">
+                <span class="btn-text">📤 Создать предложение</span>
+                <span class="btn-loader"></span>
+            </button>
+        </form>
+
+        <div class="back-link">
+            <a href="{% url 'proposals_list' %}">← Назад к списку</a>
         </div>
+    </div>
+</div>
 
-        <div style="margin-bottom: 20px;">
-            <label for="{{ form.skill_wanted.id_for_label }}" style="font-weight: bold;">{{ form.skill_wanted.label }}</label>
-            {{ form.skill_wanted }}
-            {% if form.skill_wanted.errors %}
-                <div style="color: #dc3545;">{{ form.skill_wanted.errors }}</div>
-            {% endif %}
-        </div>
-
-        <div style="margin-bottom: 20px;">
-            <label for="{{ form.format.id_for_label }}" style="font-weight: bold;">{{ form.format.label }}</label>
-            {{ form.format }}
-            {% if form.format.errors %}
-                <div style="color: #dc3545;">{{ form.format.errors }}</div>
-            {% endif %}
-        </div>
-
-        <div style="margin-bottom: 20px;">
-            <label for="{{ form.deadlines.id_for_label }}" style="font-weight: bold;">{{ form.deadlines.label }}</label>
-            {{ form.deadlines }}
-            {% if form.deadlines.errors %}
-                <div style="color: #dc3545;">{{ form.deadlines.errors }}</div>
-            {% endif %}
-        </div>
-
-        <div style="margin-bottom: 20px;">
-            <label for="{{ form.description.id_for_label }}" style="font-weight: bold;">{{ form.description.label }}</label>
-            {{ form.description }}
-            {% if form.description.errors %}
-                <div style="color: #dc3545;">{{ form.description.errors }}</div>
-            {% endif %}
-        </div>
-
-        <button type="submit" style="background: #2980b9; color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer;">
-            📤 Создать предложение
-        </button>
-        <a href="{% url 'proposals_list' %}" style="margin-left: 10px; color: #6c757d;">← Назад к списку</a>
-    </form>
+<link rel="stylesheet" href="{% static 'css/proposal_create.css' %}">
+<script src="{% static 'js/proposal_create.js' %}"></script>
 {% endblock %}

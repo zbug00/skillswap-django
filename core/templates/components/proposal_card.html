@@ -1,26 +1,51 @@
 <div class="proposal-card">
-    <h3>👤 {{ proposal.user.full_name }}</h3>
-    <p><strong>Предлагает:</strong> {{ proposal.skill_offered.name }} ({{ proposal.skill_offered.get_level_display }})</p>
-    <p><strong>Хочет взамен:</strong> {{ proposal.skill_wanted.name }} ({{ proposal.skill_wanted.get_level_display }})</p>
-    <p><em>Формат:</em> {{ proposal.get_format_display }} | Создано: {{ proposal.created_at|date:"d.m.Y H:i" }}</p>
-    {% if proposal.description %}
-        <p><strong>Описание:</strong> {{ proposal.description }}</p>
-    {% endif %}
-    {% if user.is_authenticated and proposal.user != user %}
-        <a href="{% url 'exchange_create_from_proposal' proposal.id %}" style="color: #27ae60;">🔄 Откликнуться</a>
-    {% elif user.is_authenticated and proposal.user == user %}
-        <span style="color: #95a5a6;">(это ваше предложение)</span>
-    {% else %}
-        <a href="{% url 'login' %}" style="color: #2980b9;">Войти, чтобы откликнуться</a>
-    {% endif %}
-</div>
+    <div class="proposal-header">
+        <div class="proposal-user">
+            👤 {{ proposal.user.full_name }}
+        </div>
+        <div class="proposal-meta">
+            Рейтинг: {{ proposal.user.rating }} ⭐
+        </div>
+    </div>
 
-<style>
-    .proposal-card {
-        background: white;
-        padding: 20px;
-        border-radius: 8px;
-        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-        margin-bottom: 20px;
-    }
-</style>
+    <div class="proposal-exchange">
+        <div class="proposal-offered">
+            <div class="proposal-skill-name">{{ proposal.skill_offered.name }}</div>
+            <span class="proposal-skill-level">{{ proposal.skill_offered.get_level_display }}</span>
+        </div>
+        <div class="proposal-arrow">→</div>
+        <div class="proposal-wanted">
+            <div class="proposal-skill-name">{{ proposal.skill_wanted.name }}</div>
+            <span class="proposal-skill-level">{{ proposal.skill_wanted.get_level_display }}</span>
+        </div>
+    </div>
+
+    <div class="proposal-details">
+        <div class="proposal-format">
+            <strong>Формат:</strong> {{ proposal.get_format_display }}
+        </div>
+        <div class="proposal-date">
+            Создано: {{ proposal.created_at|date:"d.m.Y H:i" }}
+        </div>
+    </div>
+
+    {% if proposal.description %}
+        <div class="proposal-description">
+            <strong>Описание:</strong> {{ proposal.description }}
+        </div>
+    {% endif %}
+
+    <div class="proposal-actions">
+        {% if user.is_authenticated and proposal.user != user %}
+            <a href="{% url 'exchange_create_from_proposal' proposal.id %}" class="respond-btn">
+                🔄 Откликнуться
+            </a>
+        {% elif user.is_authenticated and proposal.user == user %}
+            <span class="own-proposal">(это ваше предложение)</span>
+        {% else %}
+            <a href="{% url 'login' %}?next={{ request.path }}" class="login-btn">
+                🔐 Войти, чтобы откликнуться
+            </a>
+        {% endif %}
+    </div>
+</div>

@@ -1,25 +1,85 @@
 {% extends 'base.html' %}
+{% load static %}
 
 {% block title %}Предложения обмена — SkillSwap{% endblock %}
 
 {% block content %}
-    <h2>Все предложения обмена</h2>
+<div class="proposals-container">
+    <div class="proposals-header">
+        <h2>🤝 Предложения обмена</h2>
+    </div>
 
     {% if proposals %}
-        <div class="proposal-list">
+        <div class="proposals-grid">
             {% for proposal in proposals %}
-                {% include 'components/proposal_card.html' with proposal=proposal %}
+                <div class="proposal-card">
+                    <div class="proposal-header">
+                        <div class="proposal-user">
+                            👤 {{ proposal.user.full_name }}
+                        </div>
+                        <div class="proposal-meta">
+                            Рейтинг: {{ proposal.user.rating }} ⭐
+                        </div>
+                    </div>
+
+                    <div class="proposal-exchange">
+                        <div class="proposal-offered">
+                            <div class="proposal-skill-name">{{ proposal.skill_offered.name }}</div>
+                            <span class="proposal-skill-level">{{ proposal.skill_offered.get_level_display }}</span>
+                        </div>
+                        <div class="proposal-arrow">→</div>
+                        <div class="proposal-wanted">
+                            <div class="proposal-skill-name">{{ proposal.skill_wanted.name }}</div>
+                            <span class="proposal-skill-level">{{ proposal.skill_wanted.get_level_display }}</span>
+                        </div>
+                    </div>
+
+                    <div class="proposal-details">
+                        <div class="proposal-format">
+                            <strong>Формат:</strong> {{ proposal.get_format_display }}
+                        </div>
+                        <div class="proposal-date">
+                            Создано: {{ proposal.created_at|date:"d.m.Y H:i" }}
+                        </div>
+                    </div>
+
+                    {% if proposal.description %}
+                        <div class="proposal-description">
+                            <strong>Описание:</strong> {{ proposal.description }}
+                        </div>
+                    {% endif %}
+
+                    <div class="proposal-actions">
+                        {% if user.is_authenticated and proposal.user != user %}
+                            <a href="{% url 'exchange_create_from_proposal' proposal.id %}" class="respond-btn">
+                                🔄 Откликнуться
+                            </a>
+                        {% elif user.is_authenticated and proposal.user == user %}
+                            <span class="own-proposal">(это ваше предложение)</span>
+                        {% else %}
+                            <a href="{% url 'login' %}?next={{ request.path }}" class="login-btn">
+                                🔐 Войти, чтобы откликнуться
+                            </a>
+                        {% endif %}
+                    </div>
+                </div>
             {% endfor %}
         </div>
     {% else %}
-        <p>Пока нет предложений. <a href="{% url 'home' %}">Вернуться на главную</a>.</p>
+        <div class="empty-state">
+            <p>Предложений обмена пока нет.</p>
+            {% if user.is_authenticated %}
+                <a href="{% url 'proposal_create' %}" class="create-link">
+                    ➕ Создать предложение
+                </a>
+            {% else %}
+                <a href="{% url 'login' %}?next={% url 'proposal_create' %}" class="create-link">
+                    🔐 Войти, чтобы создать предложение
+                </a>
+            {% endif %}
+        </div>
     {% endif %}
-{% endblock %}
+</div>
 
-<style>
-    .proposal-list {
-        display: flex;
-        flex-direction: column;
-        gap: 20px;
-    }
-</style>
+<link rel="stylesheet" href="{% static 'css/proposals_list.css' %}">
+{% endblock %}

@@ -1,9 +1,34 @@
 <div class="skill-card">
-    <h3>{{ skill.name }}</h3>
-    <p><strong>Уровень:</strong> {{ skill.get_level_display }}</p>
-    <p><strong>Категория:</strong> {{ skill.category.name }}</p>
-    {% if skill.description %}
-        <p><em>{{ skill.description }}</em></p>
-    {% endif %}
-    <a href="{% url 'proposal_create' %}?skill_wanted={{ skill.id }}" style="color: #2980b9;">Откликнуться</a>
+    <div class="skill-header">
+        <div class="skill-name">{{ skill.name }}</div>
+        <div class="skill-meta">
+            <span class="skill-level">{{ skill.get_level_display }}</span>
+            <span class="skill-category">{{ skill.category.name }}</span>
+        </div>
+    </div>
+    
+    <div class="skill-description">
+        {{ skill.description|truncatewords:20 }}
+    </div>
+    
+    <div class="skill-footer">
+        <div class="skill-author">
+            {% if skill.user == request.user %}
+                Ваш навык
+            {% else %}
+                {{ skill.user.full_name }}
+            {% endif %}
+        </div>
+        <div class="skill-actions">
+            {% if skill.user == request.user %}
+                <a href="#" class="action-btn secondary">✏️ Редактировать</a>
+            {% else %}
+                {% if user.is_authenticated %}
+                    <a href="{% url 'proposal_create' %}?wanted_skill={{ skill.id }}" class="action-btn">🤝 Предложить обмен</a>
+                {% else %}
+                    <a href="{% url 'login' %}?next={{ request.path }}" class="action-btn">🔐 Войти для обмена</a>
+                {% endif %}
+            {% endif %}
+        </div>
+    </div>
 </div>

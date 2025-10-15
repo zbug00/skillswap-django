@@ -1,61 +1,138 @@
 {% extends 'base.html' %}
+{% load static %}
 
 {% block title %}Мой профиль — SkillSwap{% endblock %}
 
 {% block content %}
-    <h2>👤 Мой профиль</h2>
-
-    <div style="background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); margin-bottom: 30px;">
-        <h3>{{ user.full_name }}</h3>
-        <p><strong>Email:</strong> {{ user.email }}</p>
-        <p><strong>Город:</strong> {{ user.city|default:"не указан" }}</p>
-        <p><strong>Рейтинг:</strong> {{ user.rating }} ⭐</p>
-        <p><strong>Дата регистрации:</strong> {{ user.registration_date|date:"d.m.Y" }}</p>
+<div class="profile-container">
+    <div class="profile-header">
+        <h2>👤 Мой профиль</h2>
     </div>
 
-    <h3>🎓 Мои навыки</h3>
-    {% if user_skills %}
-        <ul>
-            {% for us in user_skills %}
-                <li><strong>{{ us.skill.name }}</strong> ({{ us.skill.get_level_display }}) — {{ us.skill.category.name }}</li>
-                <p><a href="{% url 'skill_create' %}" style="color: #27ae60; font-weight: bold;">➕ Добавить навык</a></p>
-            {% endfor %}
-        </ul>
-    {% else %}
-        <p>У тебя пока нет навыков. <a href="{% url 'skill_create' %}" style="color: #27ae60; font-weight: bold;">➕ Добавить навык</a></p>
-    {% endif %}
-
-    <h3>🤝 Мои предложения обмена</h3>
-    {% if user_proposals %}
-        <div style="display: flex; flex-direction: column; gap: 15px;">
-            {% for prop in user_proposals %}
-                <div style="background: #f8f9fa; padding: 15px; border-left: 4px solid #007bff; border-radius: 5px;">
-                    <p><strong>Предлагаю:</strong> {{ prop.skill_offered.name }} → <strong>Хочу:</strong> {{ prop.skill_wanted.name }}</p>
-                    <p><em>Формат:</em> {{ prop.get_format_display }} | Создано: {{ prop.created_at|date:"d.m.Y H:i" }}</p>
+    <div class="profile-grid">
+        <div class="profile-main-card">
+            <div class="profile-info">
+                <h3>📊 Данные пользователя</h3>
+                <div class="profile-details">
+                    <div class="profile-detail">
+                        <strong>Имя:</strong>
+                        <span>{{ user.full_name }}</span>
+                    </div>
+                    <div class="profile-detail">
+                        <strong>Email:</strong>
+                        <span>{{ user.email }}</span>
+                    </div>
+                    <div class="profile-detail">
+                        <strong>Город:</strong>
+                        <span>{{ user.city|default:"не указан" }}</span>
+                    </div>
+                    <div class="profile-detail">
+                        <strong>Рейтинг:</strong>
+                        <span>{{ user.rating }} ⭐</span>
+                    </div>
+                    <div class="profile-detail">
+                        <strong>Дата регистрации:</strong>
+                        <span>{{ user.registration_date|date:"d.m.Y" }}</span>
+                    </div>
                 </div>
-            {% endfor %}
+            </div>
         </div>
-    {% else %}
-        <p>У тебя пока нет предложений. <a href="{% url 'proposal_create' %}">Создать предложение</a></p>
-    {% endif %}
 
-    <h3>🔄 Мои обмены</h3>
-    {% if user_exchanges %}
-        <div style="display: flex; flex-direction: column; gap: 15px;">
-            {% for exchange in user_exchanges %}
-                <div style="background: #e8f5e9; padding: 15px; border-left: 4px solid #28a745; border-radius: 5px;">
-                    <p>С <strong>{{ exchange.user1.full_name }}</strong> ↔ <strong>{{ exchange.user2.full_name }}</strong></p>
-                    <p>Статус: <strong>{{ exchange.get_status_display }}</strong> | Формат: {{ exchange.get_format_display }}</p>
-                    {% if exchange.start_date %}
-                        <p>Начало: {{ exchange.start_date|date:"d.m.Y H:i" }}</p>
-                    {% endif %}
+        <div class="skills-card">
+            <div class="section-header">
+                <h3>🎓 Мои навыки</h3>
+            </div>
+            
+            {% if user_skills %}
+                <ul class="skills-list">
+                    {% for us in user_skills %}
+                        <li class="skill-item">
+                            <div class="skill-name">{{ us.skill.name }}</div>
+                            <div class="skill-meta">
+                                <span>Уровень: {{ us.skill.get_level_display }}</span>
+                                <span>Категория: {{ us.skill.category.name }}</span>
+                            </div>
+                        </li>
+                    {% endfor %}
+                </ul>
+                <div style="text-align: center; margin-top: 16px;">
+                    <a href="{% url 'skill_create' %}" class="action-link add-skill-link">
+                        ➕ Добавить навык
+                    </a>
                 </div>
-            {% endfor %}
+            {% else %}
+                <div class="empty-state">
+                    <p>У тебя пока нет навыков.</p>
+                    <a href="{% url 'skill_create' %}" class="action-link add-skill-link">
+                        ➕ Добавить навык
+                    </a>
+                </div>
+            {% endif %}
         </div>
-    {% else %}
-        <p>У тебя пока нет активных обменов.</p>
-    {% endif %}
+    </div>
 
-    <hr>
-    <a href="{% url 'logout' %}" style="color: #dc3545;">🚪 Выйти</a>
+    <div class="profile-grid">
+        <div class="profile-section">
+            <div class="section-header">
+                <h3>🤝 Мои предложения обмена</h3>
+            </div>
+            
+            {% if user_proposals %}
+                <div class="proposals-list">
+                    {% for prop in user_proposals %}
+                        <div class="proposal-item">
+                            <div class="proposal-exchange">
+                                <strong>Предлагаю:</strong> {{ prop.skill_offered.name }} → 
+                                <strong>Хочу:</strong> {{ prop.skill_wanted.name }}
+                            </div>
+                            <div class="proposal-meta">
+                                <span>Формат: {{ prop.get_format_display }}</span>
+                                <span>Создано: {{ prop.created_at|date:"d.m.Y H:i" }}</span>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <div class="empty-state">
+                    <p>У тебя пока нет предложений.</p>
+                    <a href="{% url 'proposal_create' %}" class="action-link">
+                        📝 Создать предложение
+                    </a>
+                </div>
+            {% endif %}
+        </div>
+
+        <div class="profile-section">
+            <div class="section-header">
+                <h3>🔄 Мои обмены</h3>
+            </div>
+            
+            {% if user_exchanges %}
+                <div class="exchanges-list">
+                    {% for exchange in user_exchanges %}
+                        <div class="exchange-item">
+                            <div class="exchange-users">
+                                С <strong>{{ exchange.user1.full_name }}</strong> ↔ 
+                                <strong>{{ exchange.user2.full_name }}</strong>
+                            </div>
+                            <div class="exchange-meta">
+                                <span>Статус: <strong>{{ exchange.get_status_display }}</strong></span>
+                                <span>Формат: {{ exchange.get_format_display }}</span>
+                                {% if exchange.start_date %}
+                                    <span>Начало: {{ exchange.start_date|date:"d.m.Y H:i" }}</span>
+                                {% endif %}
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <div class="empty-state">
+                    <p>У тебя пока нет активных обменов.</p>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<link rel="stylesheet" href="{% static 'css/profile.css' %}">
 {% endblock %}
