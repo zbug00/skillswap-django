@@ -51,7 +51,7 @@
     background: white;
     border: 2px solid #e2e8f0;
     border-radius: 8px;
-    padding: 20px 16px 8px 16px; /* Увеличил верхний padding */
+    padding: 8px 16px;
     color: #1e293b;
     font-size: 16px;
     transition: all 0.2s ease;
@@ -75,7 +75,7 @@
 .input-wrapper label {
     position: absolute;
     left: 16px;
-    top: 14px; /* Поднял label чуть выше */
+    top: 16px;
     color: #64748b;
     font-size: 16px;
     transition: all 0.2s ease;
@@ -113,7 +113,6 @@
     font-weight: 500;
 }
 
-/* Select Styling */
 .input-wrapper select {
     appearance: none;
     background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%2364748b'%3e%3cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'/%3e%3c/svg%3e");
@@ -140,7 +139,6 @@
     color: #64748b;
 }
 
-/* Error Messages */
 .error-message {
     display: block;
     color: #ef4444;
@@ -165,7 +163,6 @@
     border-color: #ef4444;
 }
 
-/* Button */
 .proposal-create-btn {
     width: 100%;
     background: #2980b9;
@@ -191,7 +188,6 @@
     transform: translateY(1px);
 }
 
-/* Loading State */
 .proposal-create-btn.loading {
     pointer-events: none;
     background: #7fb3d5;
@@ -225,7 +221,6 @@
     opacity: 1;
 }
 
-/* Back Link */
 .back-link {
     text-align: center;
     width: 100%;
@@ -246,7 +241,6 @@
     color: #4f46e5;
 }
 
-/* Success Message */
 .success-message {
     display: none;
     text-align: center;
@@ -291,7 +285,6 @@
     margin: 0;
 }
 
-/* Alert Messages */
 .alert {
     padding: 12px 16px;
     border-radius: 8px;
@@ -311,7 +304,6 @@
     border: 1px solid #fecaca;
 }
 
-/* Animations */
 @keyframes spin {
     0% { transform: translate(-50%, -50%) rotate(0deg); }
     100% { transform: translate(-50%, -50%) rotate(360deg); }
@@ -323,7 +315,6 @@
     100% { transform: scale(1); }
 }
 
-/* Mobile Responsive */
 @media (max-width: 480px) {
     .proposal-create-container {
         padding: 10px;
@@ -342,7 +333,7 @@
     .input-wrapper textarea,
     .input-wrapper select {
         font-size: 14px;
-        padding: 18px 14px 6px 14px; /* Адаптивный padding */
+        padding: 18px 14px 6px 14px;
     }
     
     .input-wrapper label {

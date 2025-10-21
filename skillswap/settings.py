@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-ykp-k$q45ktdx4n%#c#1#2*i)4r=#w1!a&!!g7nf4t^8eq=2km
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["*"]
 
 AUTH_USER_MODEL = 'core.User'
 LOGIN_REDIRECT_URL = 'profile'
