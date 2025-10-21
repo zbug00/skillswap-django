@@ -37,7 +37,6 @@
                             <option value="{{ skill.id }}" {% if form.skill_offered.value == skill.id %}selected{% endif %}>{{ skill.name }} ({{ skill.get_level_display }})</option>
                         {% endfor %}
                     </select>
-                    <label for="skill_offered">Навык для обмена</label>
                 </div>
                 <span class="error-message" id="skill_offeredError"></span>
                 {% if form.skill_offered.errors %}
@@ -53,7 +52,6 @@
                             <option value="{{ skill.id }}" {% if form.skill_wanted.value == skill.id %}selected{% endif %}>{{ skill.name }} ({{ skill.get_level_display }})</option>
                         {% endfor %}
                     </select>
-                    <label for="skill_wanted">Желаемый навык</label>
                 </div>
                 <span class="error-message" id="skill_wantedError"></span>
                 {% if form.skill_wanted.errors %}
@@ -71,7 +69,6 @@
                             {% endif %}
                         {% endfor %}
                     </select>
-                    <label for="format">Формат обмена</label>
                 </div>
                 <span class="error-message" id="formatError"></span>
                 {% if form.format.errors %}
@@ -89,7 +86,6 @@
                             {% endif %}
                         {% endfor %}
                     </select>
-                    <label for="deadlines">Сроки обмена</label>
                 </div>
                 <span class="error-message" id="deadlinesError"></span>
                 {% if form.deadlines.errors %}
